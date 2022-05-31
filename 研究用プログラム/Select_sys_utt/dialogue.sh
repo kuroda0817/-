@@ -1,0 +1,2 @@
+#/bin/bash
+python main_RL.py -A dialogue --model_sports sample220314_sports_50000_True_1000 --model_music sample220314_music_50000_True_1000 --model_eating sample220314_eating_50000_True_1000 --model_travel sample220314_travel_50000_True_1000

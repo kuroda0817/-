@@ -1,0 +1,304 @@
+%
+% LaTeX2e template for FIT2002
+%
+\documentclass[a4,twocolumn,dvipdfmx]{jarticle}
+\usepackage{epsfig,delarray,times,mathptmx}
+\usepackage{bm}
+\usepackage{graphicx}
+%\usepackage{colortbl}
+\usepackage{amsmath}
+\usepackage{fancyvrb}
+\usepackage[usenames]{color}
+\newcommand\mychangecolor[1]{\textcolor[rgb]{1,0,0}{\textbf{#1}}}
+\usepackage{comment}
+
+
+\makeatletter
+\def\section{\@startsection{section}{1}{\z@}{2ex plus .2ex minus .2ex}%
+			{.5ex plus .2ex minus .2ex}{\large\bfseries}}
+\def\thesection{\arabic{section}.}
+\def\subsection{\@startsection{subsection}{1}{\z@}{.7ex plus .2ex minus .2ex}%
+			{.5ex plus .2ex minus .2ex}{\normalsize\bfseries}}
+\def\thesubsection{\arabic{section}.\arabic{subsection}}
+\def\thefootnote{\fnsymbol{footnote}}
+\makeatother			
+
+
+\def\baselinestretch{0.8}
+
+\setlength{\textheight}{25cm}%297-30-27 - 5
+\setlength{\textwidth}{17.4cm}%210-18-18 - 10
+\setlength{\headheight}{0.0in}
+\setlength{\headsep}{-0.25in}
+\setlength{\oddsidemargin}{-.75cm}%+3
+\setlength{\evensidemargin}{-.75cm}%+3
+\setlength{\columnsep}{7mm}
+
+% local settings
+
+% end of local settings
+
+
+\begin{document}
+\pagestyle{empty}
+\thispagestyle{empty}
+
+\twocolumn[%
+\begin{center}
+ {\bf \LARGE システム発話間の内容的整合性を用いた\\
+ 強化学習に基づく発話選択}
+\vspace{2mm}
+
+\large
+\mbox{}
+\hfil
+\setcounter{footnote}{2}
+{\bfseries 黒田 佑樹}${}^\thefootnote$
+\hfil
+\setcounter{footnote}{3}
+{\bfseries 武田 龍}${}^\thefootnote$
+\hfil
+\setcounter{footnote}{3}
+{\bfseries 駒谷 和範}${}^{\thefootnote}$
+\hfil
+\mbox{}
+\vspace{0.4mm}
+
+\mbox{}
+\hfil
+{\normalsize \dag 大阪大学 工学部電子情報工学科}
+\hfil
+{\normalsize \ddag 大阪大学 産業科学研究所}
+\hfil
+\mbox{}
+\hfil
+\vspace{1mm}
+\end{center}
+]
+
+\insert\footins{\noindent \footnotesize
+System Utterance Selection based on Reinforcement Learning using Consistency between Utterance:
+{\sl Yuki Kuroda, Ryu Takeda, and Kazunori Komatani (Osaka Univ.)}
+}
+
+%駒谷先生案
+\section{はじめに}
+用意した話題についてユーザに話してもらう，聞き役の雑談対話システムの実現を目指している．これに際して，発話の候補集合を用意し，その中から
+システム発話を適切に選択するというアプローチを採っている．このような対話システムでは，システムの質問に対するユーザ応答のパターンはある程度限定できる．
+%本当はこのあたりでライブコンペの論文を引用するとよい．
+このため，ユーザ発話の解析に偏重せず，システム発話の順序をコントロールすることで，対話を成立させることを狙う．
+
+対話システムにおいて，適切なシステム発話を選択するという問題は，強化学習で定式化できる．
+%本来ここで世の中の類似研究を挙げ，それらとの差分を論じることが必要
+我々のグループの以前の研究では，対話行為を設計してシステム発話集合を分類し\cite{nishimoto}，この対話行為に基づき状態と行動を設計していた．ここでは対話行為単位で行動を選択した後，その中に含まれる発話をランダムに選択していたため, 不適切なシステム発話が選択されることがあった．
+
+本稿ではまずシステム発話の内容に基づいてシステム発話集合を人手で分類し，状態と行動を再設計する．次に新たな状態行動セットに，システム発話の内容の順序の整合性に基づく報酬を設計する．これらにより，システム発話が適切に選択される回数を増加させる．
+
+
+\begin{comment}
+本稿ではシステム側から話題提供し， あらかじめ用意された発話集合を賢く選択することによってユーザに喋ってもらう聞き役の雑談対話システムを実現することを目指す．
+
+
+自ら話題提供する対話システムでは， システム発話の質問内容等からユーザの応答がある程度予想できる．
+そのため，システム発話生成の際にユーザ発話の解析に偏重する必要はない．
+予め用意したシステム発話の順序をコントロールするだけで， ユーザを満足させる対話が可能である．
+
+システム発話の順序をコントロールする雑談対話システムの研究としては，強化学習を用いたもの\cite{nishimoto}がある．
+この研究では少数のシステム発話集合を対話行為に分類し，状態と行動の設計に用いているため，発話選択が対話行為単位でしか行えなかった．行動として対話行為を選択した後の発話選択はランダムであり, 不適切なシステム発話列が選択されることがあった．
+
+本稿ではまず発話内容に基づいて少数のシステム発話集合を手動で分類し，状態と行動を再設計する．
+次に新たな状態行動セットに，システム発話の内容の順序の整合性に基づいた報酬を設計する．
+これらにより，対話行為以上に細かい単位での適切な発話選択を可能とする．
+\end{comment}
+
+\section{現有システムの分析と新たな設計}
+
+破綻の生じやすい対話行為順に含まれる対話行為を意味内容レベルで細分化して，状態や行動を再設計する．それぞれの状態や行動に関して内容的整合性に則した報酬を与えて強化学習を行うことで，破綻の削減を図る．
+
+\subsection{内容的破綻の生じやすい対話行為順}\label{tyosa}
+
+まず本研究でベースとした，西本らの手法\cite{nishimoto}に基づくシステム（以降これを従来システムと呼ぶ）で得られる結果を分析した．
+このシステムは，少数のシステム発話を表\ref{tab:DA}に示す8つの対話行為に分類し，それに基づく強化学習により発話を選択する．
+ここでの特定話題は，従来システムで扱われている話題に関する内容の発話を指す．またdefaultとはあらゆる話題に使える一般的な発話を指す．
+%これによりターンごとの対話行為の選択戦略を獲得し，ある程度適切な発話選択を可能にした．一方，特定の対話行為順で破綻が生じることが多かった．
+
+%従来システムを用いた対話システムでテキスト対話を行った
+この結果，内容的破綻が生じやすい対話行為順として，以下の3種類のパターンがあった．
+\begin{enumerate}
+\item (c)指示語なし質問 → (b)指示語あり質問(特定話題) or (a)指示語あり質問(default)
+\item (b)指示語あり質問(特定話題) or (c)指示語なし質問 → (d)指示語あり応答(特定話題+default) or (g)感謝
+\item (a)指示語あり質問(default)→(d)指示語あり応答(特定話題+default) or (g)感謝
+\end{enumerate}
+
+それぞれの対話行為順で生じる破綻の例を図\ref{hatan} に示す．ここでSとUはそれぞれシステムとユーザの発話を表す．システム発話末尾の()内はその対話行為を示す．赤字は破綻箇所である．
+パターン1の破綻は，主に指示語の指す対象がユーザ発話中に存在しないことが原因である．
+パターン2の破綻は，主に指示語の指す対象がその後のシステムの反応とかみ合っていないことが原因である．
+パターン3は破綻の直前のシステム発話を見るだけでは破綻かどうかわからないが，その一つ前のシステム発話を見るとパターン1と同様の理由で破綻している．これは(a)指示語あり質問（default）の意味が，直近の(c)指示語なし質問もしくは(b)指示語あり質問（特定話題）に依存するためである．
+
+\begin{table}[tb]
+\small
+    \caption{[1]で用いられていた対話行為8種類}\label{tab:DA}
+    \centering
+    \begin{tabular}{|l|l|}\hline 
+         対話行為&説明  \\ \hline \hline
+         qs\_o\_d&(a)指示語あり質問(default) \\ \hline
+         qs\_o\_s&(b)指示語あり質問(特定話題) \\ \hline
+         qs\_x\_s&(c)指示語なし質問(特定話題) \\ \hline
+         re\_o\_m&(d)指示語あり応答(特定話題+default) \\ \hline
+         re\_x\_d&(e)指示語なし応答(default) \\ \hline
+         re\_x\_m&(f)指示語なし応答(特定話題+default) \\ \hline
+         thank&(g)感謝 \\ \hline
+         io&(h)情報提供 \\ \hline
+    \end{tabular}
+\end{table}
+
+\begin{figure}[tb]
+\centering
+%\small
+\begin{Verbatim}[commandchars=\\\{\}]
+【パターン1】
+S: 楽器は何を演奏するのですか？(qs_x_s)
+U: ピアノを弾きます
+\mychangecolor{S: その歌手のどういうところが好きなんです}
+\mychangecolor{　　か？(qs_o_s)}
+U: どの歌手？ 
+\end{Verbatim}
+%\caption{破綻パターン1}
+%\label{hatan1}
+
+\begin{Verbatim}[commandchars=\\\{\}]
+【パターン2】
+S: 競技は何をご覧になりますか？(qs_x_s)
+U: 野球です
+\mychangecolor{S: それは大変ですよね(re_o_m)}
+U: 大変ですかね
+\end{Verbatim}
+%\caption{破綻パターン2}
+%\label{hatan2}
+
+
+
+\begin{Verbatim}[commandchars=\\\{\}]
+【パターン3】
+S: おすすめの曲はありますか？(qs_x_s)
+U: スピッツの楓という曲がおすすめですよ
+S: 具体的に教えてください？(qs_o_d) 
+U: 歌詞が詩的で素敵なんですよね 
+\mychangecolor{S: それは大変ですよね。(re_o_m)}
+U: 大変ですかね 
+\end{Verbatim}
+\caption{3つの破綻パターンの例}
+\label{hatan}
+\end{figure}
+
+
+\subsection{意味内容を考慮した強化学習の設計}\label{idea}
+
+パターン1や2の破綻を防ぐためには，まず破綻が生じやすい対話行為内の発話を，他の対話行為とは独立の状態，行動とする．
+次に，あるシステム発話の後にこのシステム発話が来ると不自然であるという関係を人手で与える．
+この関係に負の報酬を付けて学習することで，不適切なシステム発話の選択を防ぐ．
+
+パターン3の破綻を防ぐには，(a)指示語あり質問(default)より前の，(c)指示語なし質問もしくは(b)指示語あり質問(特定話題)に注目する必要がある．まず，(a)指示語あり質問(default)の発話と，その直近に現れた(c)指示語なし質問もしくは(b)指示語あり質問(特定話題)の発話の組み合わせを状態とする．(c)，(b)と，(d)指示語あり応答（特定話題）もしくは(g)感謝との関係をパターン1，2と同様に関係付けることで，同様に不適切なシステム発話の選択を防ぐ．
+
+\begin{comment}
+パターン3に関しては，指示語あり質問(default)もしくは感謝が選ばれた時に，指示語あり質問(特定話題)もしくは指示語なし質問と指示語あり応答(特定話題+default)があればかみ合っているかどうかに報酬を付ければ破綻を防ぐことができる．この際，指示語あり質問(default)内の発話と，その直前の指示語あり質問(特定話題)か指示語なし質問の発話の組み合わせを状態として表現する必要がある．
+\end{comment}
+%
+これらにより，破綻を防ぐより詳細な発話選択の戦略を強化学習する．
+
+
+\section{強化学習の実装の詳細}
+%従来システムで学習された対話行為の選択戦略とは別に，
+%\ref{idea}節の設計に基づき発話集合を分類して強化学習を行い，新たな選択戦略を獲得する．
+%従来システムの選択戦略で対話行為レベルでの選択を行い，新たな選択戦略で内容的破綻を防ぐ．
+%本節では提案システムにおける新たな選択戦略のみの実装を示す．
+
+%\subsection{発話集合}
+発話集合は雑談対話コーパスHazumi1902\cite{Hazumi}収集時に使用された発話から，「スポーツ」の話題と，どの話題にも用いることのできる「default」発話を抜き出した計67発話である．
+
+%\subsection{行動設計}
+\ref{tyosa}節に示した3パターンの関係を表現するため，破綻が起きやすい対話行為順の後ろの対話行為を発話ごとに分け，それぞれを行動とする．それ以外の対話行為内の発話はランダムに選んでも問題ないため1つの対話行為を1つの行動とする．
+%矢印の右側の対話行為内の発話とそれ以外の対話行為となる．
+(a)指示語あり質問(default)，(b)指示語あり質問(特定話題)，(d)指示語あり応答(特定話題+default，(g)感謝は役割がほぼ重複する発話を除いてそれぞれ3個，7個，17個，3個の発話があり，これら以外の対話行為は4個あるため，行動数は合わせて34となる．
+
+%\subsection{状態設計}
+状態も行動同様破綻が生じやすい対話行為順の前の対話行為を発話ごとに分け，それ以外は1対話行為1状態とする．
+%\ref{tyosa}節に示したパターンの矢印の左側の対話行為内の発話とそれ以外の対話行為となる．
+(a)指示語あり質問(default)，(b)指示語あり質問(特定話題)，(c)指示語なし質問は役割がほぼ重複する発話を除いてそれぞれ11個，5個，7個の発話があり，これら以外の対話行為は5個ある．またこれに加えて\ref{idea}節で述べたように(a)指示語あり質問(default)内の発話と，その直近の(b)指示語あり質問(特定話題)か(c)指示語なし質問の発話の組み合わせを状態として表現する必要がある．これが7*(11+5)個であるため，合計の状態数は140となる．
+
+%\subsection{報酬設計}
+報酬は連続する2つのシステム発話の整合性に対して与える．具体的には各システム発話にこの発話の後に来てはいけないという発話集合（blacklist）を設け，
+各システム発話が選択されたときにその前のシステム発話がblacklist内にあれば負の報酬を与える．
+ただし\ref{idea}節でも述べたように，(a)指示語あり質問(default)を参照する場合は，その前に(b)指示語あり質問(特定話題)か(c)指示語なし質問の発話があればそちらを参照する．
+
+%\subsection{学習方法}
+強化学習にはQ学習を用いた．Q学習のQ値は式(\ref{eq:Qvalue})で更新され，状態行動セットを表すQテーブルにQ値が記述される．
+\begin{align}\label{eq:Qvalue}
+\begin{split}
+Q(s_t,a_t) \leftarrow & (1-\alpha)Q(s_t,a_t)\\
+& + \alpha(r_{t+1} + \gamma \max_{a_{t+1}}Q(s_{t+1},a_{t+1}))
+\end{split}
+\end{align}
+
+%\subsection{ユーザモデル}
+ユーザモデルは選択されたシステム発話に対し, コーパス収集時と同じユーザ応答を返す．
+
+%\subsection{発話選択}
+システムの発話選択では，まず従来手法で対話行為を選択し，その対話行為内の発話で，本手法の選択戦略内においてQ値が高いものが確率的に選択した．
+
+\section{評価実験}
+\subsection{実験条件}
+新たな状態行動報酬設計を用いた強化学習を実装し，テキスト対話を行って評価した．
+システム発話とユーザ発話の1対を１交換，10交換を１セットの対話とし，10セット100交換を評価の対象とした．
+
+評価基準は東中らの研究\cite{higashinaka}を参考にした．
+〇は当該システム発話のあと対話を問題無く継続できる．
+ △は当該システム発話のあと対話をスムーズに継続するこ
+とが困難である．
+ ×は当該システム発話のあと対話を継続することが困難であるという基準である．
+これら○△×のアノテーションの数と全交換数に対する割合で手法を評価した．
+
+比較対象は，従来システムにおける発話集合を「スポーツ」「default」に絞ったものとした．
+
+\subsection{実験結果と考察}
+従来システムと提案システムの評価を表\ref{hyoka}に示す．
+△と×のアノテーションの数に関していずれの項目でも提案システムの方が少なかった．
+全アノテーション数に対する割合は，△は従来システムで6\%提案システムで3\%，×は従来システムで6\%提案システムで3\%，△と×の合計は従来システムで12\%提案システムで6\%であった．
+このことより，提案システムの方がより破綻の少なくなる発話を選択できているといえる．
+
+実際に，従来システムでは図\ref{hatan}のパターン2と同様の破綻が起きたが，提案システムでは見られなかった．これはシステム発話間の内容的整合性を考慮した設計が破綻削減に有効であったことを示している
+\begin{table}[tb]
+\caption{主観評価による破綻数の比較}
+\centering
+  \begin{tabular}{|l|c|c|c|} \hline
+      &〇& △& × \\ \hline \hline
+    従来システム & 88 & 6 & 6\\ \hline
+    提案システム & 94 & 3 & 3 \\ \hline
+  \end{tabular}\label{hyoka}
+\end{table}
+\begin{comment}
+\begin{table}[htb]
+\caption{西本らの手法での破綻例}
+\centering
+\begin{Verbatim}[commandchars=\\\{\}]
+S: どんなスポーツをされましたか？  
+U: バドミントンは昔してましたね．  
+\mychangecolor{S: それは大変ですよね。}  
+U: 大変ですかね 
+
+\end{Verbatim}
+\end{table}
+\end{comment}
+
+今回はシステム発話間の内容的整合性を人手で設定したが，発話数が増加するとそれは困難になる．今後は自動でシステム発話間の内容的整合性を設定できるような手法が必要となる．
+
+
+
+% bibを使う場合
+\bibliographystyle{jplain}
+\bibliography{name}
+
+% bibを使わない場合
+
+
+\end{document}

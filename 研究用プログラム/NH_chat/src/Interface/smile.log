@@ -1,0 +1,24 @@
+[ 19.03.2022 - 05:46:06 ]
+    (MSG) [2] SMILExtract: openSMILE starting!
+[ 19.03.2022 - 05:46:06 ]
+    (MSG) [2] SMILExtract: config file is: C:/Users/nh-chat/Documents/100-Exercise/NH_chat/src/Interface/../../tools/opensmile-3.0-win-x64/config/is09-13/IS09_emotion.conf
+[ 19.03.2022 - 05:46:06 ]
+    (MSG) [2] cComponentManager: successfully registered 103 component types.
+[ 19.03.2022 - 05:46:06 ]
+    (MSG) [2] instance 'lldsink': No filename given, disabling this sink component.
+[ 19.03.2022 - 05:46:06 ]
+    (MSG) [2] instance 'lldhtksink': No filename given, disabling this sink component.
+[ 19.03.2022 - 05:46:06 ]
+    (MSG) [2] instance 'lldarffsink': No filename given, disabling this sink component.
+[ 19.03.2022 - 05:46:06 ]
+    (MSG) [2] instance 'csvsink': No filename given, disabling this sink component.
+[ 19.03.2022 - 05:46:06 ]
+    (MSG) [2] instance 'htksink': No filename given, disabling this sink component.
+[ 19.03.2022 - 05:46:06 ]
+    (MSG) [2] instance 'arffsink': writing ARFF header (384 features)...
+[ 19.03.2022 - 05:46:06 ]
+    (MSG) [2] cComponentManager: successfully finished createInstances (25 component instances were finalised, 1 data memories were finalised)
+[ 19.03.2022 - 05:46:06 ]
+    (MSG) [2] cComponentManager: starting single thread processing loop
+[ 19.03.2022 - 05:46:06 ]
+    (MSG) [2] cComponentManager: Processing finished! System ran for 357 ticks.

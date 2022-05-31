@@ -1,0 +1,250 @@
+%
+% 修士論文用スタイルファイル （以前使用していたjmaster.clsから作り直し)
+%   卒業論文対応版
+%
+% 佐藤理史 (2012.2.2)
+%
+% 以下のように指定する(両面印刷がdefault; 片面印刷の場合は、オプションを[oneside,12pt]に
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \documentclass[12pt]{jbook}
+% \usepackage{master}
+% \usepackage[dvipdfmx]{graphicx}
+% 
+% % \bachelor 卒論の場合
+% \{ウィキペディアの\\日英言語横断見出し語検索}
+% \supervisor{佐藤 理史 教授}
+% \affi{名古屋大学大学院工学研究科\\電子情報システム専攻}
+% \author{岡田 昌也}
+% 
+% \pagestyle{headings}
+% 
+% \begin{document}
+% \maketitle
+% \clearpage
+% 
+% \pagenumbering{roman}
+% \setcounter{page}{1}
+% 
+% \input{abstract}
+% \abstractpage
+% \tableofcontents
+% \cleardoublepage
+% 
+% \pagenumbering{arabic}
+% \setcounter{page}{1}
+% 
+% \chapter{序論}
+% ...
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% 注意：
+%
+% \renewcommand{\baselinestretch}{1.1}を指定してあるので、
+% これを変更した場合に元に戻す場合は、1.1に戻すこと!
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% サイズ
+%
+\setlength{\oddsidemargin}{6mm} 
+\setlength{\evensidemargin}{6mm}
+\setlength{\textwidth}{150.0mm}
+\setlength{\textheight}{216.0mm}
+\renewcommand{\baselinestretch}{1.1}
+
+% 表紙
+\newcommand{\affi}[1]{\newcommand{\@affi}{#1}}             % 専攻
+\newcommand{\supervisor}[1]{\newcommand{\@supervisor}{#1}} % 指導教員
+\newcommand{\atitle}[1]{\newcommand{\@atitle}{#1}} % 指導教員
+
+%
+%
+% タイトルページ
+%
+\newcommand{\thesistype}{学~~~~士~~~~学~~~~位~~~~論~~~~文}
+\newcommand{\bachelor}{\renewcommand{\thesistype}{学~~~~士~~~~学~~~~位~~~~論~~~~文}}
+\if@titlepage
+  \renewcommand{\maketitle}{\begin{titlepage}%
+  \setcounter{page}\z@%
+  \let\footnotesize\small
+  \let\footnoterule\relax
+  \let\footnote\thanks
+  \null\vfil
+  \vspace*{-21mm}
+  \begin{center}%
+    {\LARGE  \thesistype}\par
+    \vspace*{22mm}
+    {題~~~~~~~~~~~~~~~~~目}\par
+    \vspace*{21mm}
+    {\fontsize{10pt}{0cm}\selectfont {\setulminsep{1.2ex}{0.3ex}\setulsep{0.1pt} \setulwidth{1pt} \unl{\@title}} \par}%
+    \vspace*{15mm}
+    {\fontsize{10pt}{0cm}\selectfont 指\ \ 導\ \ 教\ \ 員\par}
+	\vspace*{16.5mm}
+	{\fontsize{10pt}{0cm}\selectfont \underline{\@supervisor} \par}%
+	\vspace*{20mm}
+    {\fontsize{10pt}{0cm}\selectfont 報~~~~~告~~~~~者\par}%
+	\vspace*{15mm}
+    {\fontsize{10pt}{0cm}\selectfont \underline{\@author} \par}%
+    \vspace*{19mm}%
+    {\@date \par}%       % Set date in \large size.
+    %% \vspace*{80mm}
+    \vspace*{18mm}
+    {\fontsize{14pt}{0cm}\selectfont \@affi \par}%
+  \end{center}
+  \end{titlepage}%
+  \setcounter{footnote}{0}%
+  \global\let\thanks\relax
+  \global\let\maketitle\relax
+%%   \global\let\p@thanks\relax
+%%   \global\let\@thanks\@empty
+%%   \global\let\@author\@empty
+%%   \global\let\@date\@empty
+%%   \global\let\@title\@empty
+%%   \global\let\title\relax
+%%   \global\let\author\relax
+%%   \global\let\date\relax
+  \global\let\and\relax
+  \if@twoside 
+  % 表紙ページの次に、空白ページを作る
+  \thispagestyle{empty}
+      　
+      %\newpage
+  \fi
+  }%
+\fi
+
+% %
+% % アブストラクト
+% % 
+\newcommand{\@abstract}{}
+\newcommand{\abstracttext}[1]{\renewcommand{\@abstract}{#1}}
+\newcommand{\abstractpage}{
+  %\newpage
+% \pagestyle{plain}
+  \begin{center}
+    \Large\bfseries \@atitle
+  \end{center}
+  \vspace*{.5mm}
+  \begin{center}
+    \large \@author
+  \end{center}
+  \vspace*{2.5mm}
+  \begin{center}
+  \bfseries 論文梗概
+  \end{center}
+  \@abstract
+  \clearpage
+%  \pagestyle{headings}
+}
+
+%
+% 参考文献
+% 
+\renewcommand{\bibname}{参考文献}
+
+% 参考文献も目次に載せる. 
+\renewenvironment{thebibliography}[1]
+{\chapter*{\bibname}\@mkboth{\bibname}{\bibname}%
+  \addcontentsline{toc}{chapter}{\bibname}%
+  \list{\@biblabel{\@arabic\c@enumiv}}%
+  {\settowidth\labelwidth{\@biblabel{#1}}%
+    \leftmargin\labelwidth
+    \advance\leftmargin\labelsep
+    \@openbib@code
+    \usecounter{enumiv}%
+    \let\p@enumiv\@empty
+    \renewcommand\theenumiv{\@arabic\c@enumiv}}%
+  \sloppy\clubpenalty4000\widowpenalty4000%
+  \sfcode`\.\@m}
+{\def\@noitemerr
+  {\@latex@warning{Empty `thebibliography' environment}}%
+  \endlist}
+
+%
+% 謝辞
+%
+\newcommand{\ackname}{謝辞}
+\newenvironment{acknowledgement}%
+{\newpage\chapter*{\ackname}%
+  \@mkboth{\ackname}{\ackname}%
+  \addcontentsline{toc}{chapter}{\ackname}}%
+{} %%\begin{flushright}\@date\end{flushright}
+
+%
+% 図のcaption
+% e.g., 図1.2: キャプション ==> 図1.2 キャプション
+%
+\long\def\@makecaption#1#2{%
+  \vskip\abovecaptionskip
+  \iftdir\sbox\@tempboxa{#1\hskip1zw#2}%
+    \else\sbox\@tempboxa{#1 #2}%
+  \fi
+  \ifdim \wd\@tempboxa >\hsize
+    \iftdir #1\hskip1zw#2\relax\par
+      \else #1 #2\relax\par\fi
+  \else
+    \global \@minipagefalse
+    \hbox to\hsize{\hfil\box\@tempboxa\hfil}%
+  \fi
+  \vskip\belowcaptionskip}
+
+%
+% 付録
+%       付録のsection以下は目次に表示しない
+%
+% 付録用目次出力最小レベル
+\def\appdxmode{0}
+\newcount\c@appdxtocdepth
+\setcounter{appdxtocdepth}{1}
+% sect の再定義(latex.ltxから)
+\def\@sect#1#2#3#4#5#6[#7]#8{%
+  \ifnum #2>\c@secnumdepth
+    \let\@svsec\@empty
+  \else
+    \refstepcounter{#1}%
+    \protected@edef\@svsec{\@seccntformat{#1}\relax}%
+  \fi
+  \@tempskipa #5\relax
+  \ifdim \@tempskipa>\z@
+    \begingroup
+      #6{%
+        \@hangfrom{\hskip #3\relax\@svsec}%
+          \interlinepenalty \@M #8\@@par}%
+    \endgroup
+    \csname #1mark\endcsname{#7}%
+    \ifnum\appdxmode=1
+      \ifnum #2>\c@appdxtocdepth \else
+        \addcontentsline{toc}{#1}{%
+          \ifnum #2>\c@secnumdepth \else
+            \protect\numberline{\csname the#1\endcsname}%
+          \fi
+          #7}%
+      \fi
+    \else
+      \addcontentsline{toc}{#1}{%
+        \ifnum #2>\c@secnumdepth \else
+          \protect\numberline{\csname the#1\endcsname}%
+        \fi
+        #7}%
+    \fi
+  \else
+    \def\@svsechd{%
+      #6{\hskip #3\relax
+      \@svsec #8}%
+      \csname #1mark\endcsname{#7}%
+      \addcontentsline{toc}{#1}{%
+        \ifnum #2>\c@secnumdepth \else
+          \protect\numberline{\csname the#1\endcsname}%
+        \fi
+        #7}}%
+  \fi
+  \@xsect{#5}}
+
+\renewcommand{\appendixname}{付録}
+\renewcommand{\appendix}{\par
+  \setcounter{chapter}{0}%
+  \setcounter{section}{0}%
+  \def\appdxmode{1}%
+  \renewcommand{\@chapapp}{\appendixname}%
+  \renewcommand{\@chappos}\space%
+  \renewcommand{\thechapter}{\@Alph\c@chapter}}

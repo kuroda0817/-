@@ -1,0 +1,5 @@
+exchgID,state,action,theme,UI,utterance
+00_S,qs_o_s_14_Nx_h_ne,change_theme,-,-, *** これから旅行の話をしましょう***
+00_U,-,-,-,4.0,
+01_S,ct_0,qs_x_s,旅行,-, 旅行に行くときはなにか目的はありますか？
+01_U,-,-,-,4.0,景色を見ることです

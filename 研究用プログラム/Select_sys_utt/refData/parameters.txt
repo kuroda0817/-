@@ -1,0 +1,63 @@
+## メモ
+# 190926_fea8は対話行為5で手で分類したやつ
+# 191015_daこれは対話行為8(6)のやつ
+# 191024_fea15_normがこれまでの暫定の対話行為セット
+# 200109_fea8が洗練された対話行為セット
+
+
+
+## 強化学習で使用します
+
+# テーマ情報と使用発話情報
+# クラスの情報はいらない
+path_theme_info=./1902themeInfo/1902MMcorpus_theme_2001.csv
+
+# ここにはagent_utteranceとcls(string)の情報が入っていればいい
+path_utterance_by_class_named=./200109_cls8/200109_cls8_bycls_named.csv
+###path_utterance_by_class_named=./refData/200110_baseDA4.csv
+path_utterance_by_class_named_sports=./200109_cls8/200109_cls8_bycls_named_sports.csv
+path_utterance_by_class_named_music=./200109_cls8/200109_cls8_bycls_named_music.csv
+path_utterance_by_class_named_eating=./200109_cls8/200109_cls8_bycls_named_eating.csv
+path_utterance_by_class_named_travel=./200109_cls8/200109_cls8_bycls_named_travel.csv
+# このファイルに書かれた順番でHMのactionを表示する
+path_class_name=./refData/200109_cls8_DAname.csv
+###path_class_name=./refData/200110_baseDA4_DAname.csv
+
+# クラス数
+class_num=8
+###class_num=4
+
+# 使用テーマ情報
+path_using_theme=./refData/usingTheme.txt
+
+# bigram報酬の値の管理ファイル
+path_reward_da=./refData/reward_bigramDA.csv
+
+# 簡易的対話行為の記述ファイル
+path_simple_da=./refData/simpleDA.csv
+
+# ユーザモデルの発話情報
+path_virtual_user_data=./refData/exchgUI3Info.csv
+
+
+# 理想のQテーブル
+path_risouQ=./200117_risouQ
+
+
+## 対話行為セットの設計時に使用します
+
+path_using_features=./refData/200109_fea7.csv
+
+dir_clustering=200109_cls8
+path_main_class_info=./200109_cls8/200109_cls8.csv
+path_utterance_by_class=./200109_cls8/200109_cls8_bycls.csv
+path_freq_class_theme=./200109_cls8/200109_cls8_freq_cls-theme.csv
+path_feature_average_by_class=./200109_cls8/200109_cls8_average.csv
+
+
+# 強化学習の報酬
+R_oneUI=1
+R_persistUI=5
+Rc_bigram=0.5
+R_noun=10
+R_thank=-10
