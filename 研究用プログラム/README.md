@@ -19,5 +19,5 @@ OpenFaceを用いて顔画像特徴、openSMILEを用いて韻律特徴を取得
 
 <img src="./image/sekkei.png" width="100%">
 
-##実際の動作
+## 実際の動作
 https://www.youtube.com/watch?v=JD10jlBFLjY
