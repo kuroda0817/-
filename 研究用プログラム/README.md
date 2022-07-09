@@ -1,5 +1,5 @@
 # 聞き役対話システムNH-chat
 ユーザの話の聞き役となるような音声対話システム．ユーザの音声と顔画像を入力として、予め用意した発話集合から状況に応じた質問やリアクションを返す．
 
-
-<img src="./image/taiwa2.png" width="3cm">
+![対話例](./image/taiwa2.png) 
+<img src="./image/taiwa2.png" width="50%">
