@@ -18,3 +18,6 @@ OpenFaceを用いて顔画像特徴、openSMILEを用いて韻律特徴を取得
 深層強化学習の手法の一種である、Deepc Q Networkを用いた学習モデルに、システム発話履歴(テキスト)、ユーザ発話(テキスト)と心象を入力し、適切な発話選択を得る．
 
 <img src="./image/sekkei.png" width="100%">
+
+##実際の動作
+https://www.youtube.com/watch?v=JD10jlBFLjY
