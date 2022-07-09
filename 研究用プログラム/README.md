@@ -16,4 +16,4 @@ OpenFaceを用いて顔画像特徴、openSMILEを用いて韻律特徴を取得
 ### 発話選択部(/Select_sys_utt内)
 深層強化学習の手法の一種である、Deepc Q Networkを用いた学習モデルに、システム発話履歴(テキスト)、ユーザ発話(テキスト)と心象を入力し、適切な発話選択を得る．
 
-<img src="./image/sekkei.png" width="50%">
+<img src="./image/sekkei.png" width="100%">
